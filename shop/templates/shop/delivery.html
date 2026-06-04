@@ -1,0 +1,55 @@
+{% extends 'shop/base.html' %}
+
+{% block title %}Доставка и оплата · LEVELUP{% endblock %}
+
+{% block content %}
+
+<section class="page-hero anim a1">
+  <p class="eyebrow">Условия</p>
+  <h1 class="page-heading">Доставка и оплата</h1>
+  <p class="page-lead">Прозрачные условия без скрытых платежей и неожиданностей.</p>
+</section>
+
+<section class="section">
+  <div class="two-col anim a1">
+    <div class="col-block">
+      <h2 class="col-heading">Доставка</h2>
+      <ul class="clean-list">
+        <li>По Алматы: 1 рабочий день</li>
+        <li>По Казахстану: 2–4 рабочих дня</li>
+        <li>Цифровые ключи: мгновенно на email</li>
+        <li>Бесплатно при заказе от 20 000 ₸</li>
+      </ul>
+      <p style="font-size:13px;color:var(--muted);margin-top:18px;font-weight:400;line-height:1.7;">
+        После отправки вы получите трек-номер на email для самостоятельного отслеживания.
+      </p>
+    </div>
+
+    <div class="col-block">
+      <h2 class="col-heading">Оплата</h2>
+      <ul class="clean-list">
+        <li>Kaspi / банковская карта онлайн</li>
+        <li>Наличный расчет при получении</li>
+        <li>Безналичный расчет для юридических лиц</li>
+      </ul>
+      <p style="font-size:13px;color:var(--muted);margin-top:18px;font-weight:400;line-height:1.7;">
+        Все платежи защищены. Фискальный чек направляется на email.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="panel panel-pad anim a1">
+    <p class="eyebrow">Важно знать</p>
+    <h2 class="col-heading" style="margin-bottom:14px;">Обмен и возврат</h2>
+    <p style="font-size:15px;color:var(--text-dim);font-weight:400;line-height:1.85;max-width:720px;">
+      Физические копии можно вернуть в течение <strong style="color:var(--text);">14 дней</strong>
+      при сохранении заводской упаковки и отсутствии следов использования.
+      Цифровые ключи возврату не подлежат после активации.
+      Для оформления возврата свяжитесь с нами через страницу <a href="{% url 'shop:contacts' %}" style="color:var(--accent-lt);">контактов</a>.
+    </p>
+  </div>
+</section>
+
+{% endblock %}

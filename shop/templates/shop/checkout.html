@@ -1,0 +1,248 @@
+{% extends 'shop/base.html' %}
+
+{% block title %}Оформление заказа · LEVELUP{% endblock %}
+
+{% block content %}
+
+<div class="breadcrumbs anim a1">
+  <a href="{% url 'shop:home' %}">Главная</a>
+  <span>·</span>
+  <a href="{% url 'shop:cart' %}">Корзина</a>
+  <span>·</span>
+  <span>Оформление</span>
+</div>
+
+<section class="checkout-layout anim a2">
+
+  <!-- Form -->
+  <div class="panel panel-pad">
+    <p class="panel-title">Контактные данные</p>
+
+    <form method="post" class="checkout-form">
+      {% csrf_token %}
+
+      {% if form.non_field_errors %}
+        <div class="alert error">{{ form.non_field_errors }}</div>
+      {% endif %}
+
+      <div class="field-grid">
+        <div class="form-field">
+          <label class="form-label" for="co-name">ФИО</label>
+          <input id="co-name" class="input" type="text" name="full_name" value="{{ form.full_name.value|default:'' }}" required />
+          {% if form.full_name.errors %}<div class="field-error">{{ form.full_name.errors|striptags }}</div>{% endif %}
+        </div>
+
+        <div class="form-field">
+          <label class="form-label" for="co-phone">Телефон</label>
+          <input id="co-phone" class="input" type="text" name="phone" value="{{ form.phone.value|default:'' }}" required />
+          {% if form.phone.errors %}<div class="field-error">{{ form.phone.errors|striptags }}</div>{% endif %}
+        </div>
+      </div>
+
+      <div class="field-grid">
+        <div class="form-field">
+          <label class="form-label" for="co-email">Email (необязательно)</label>
+          <input id="co-email" class="input" type="email" name="email" value="{{ form.email.value|default:'' }}" />
+        </div>
+
+        <div class="form-field">
+          <label class="form-label" for="co-city">Город</label>
+          <input id="co-city" class="input" type="text" name="city" value="{{ form.city.value|default:'' }}" required />
+          {% if form.city.errors %}<div class="field-error">{{ form.city.errors|striptags }}</div>{% endif %}
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label class="form-label" for="co-address">Адрес доставки</label>
+        <input id="co-address" class="input" type="text" name="address" value="{{ form.address.value|default:'' }}" required />
+        {% if form.address.errors %}<div class="field-error">{{ form.address.errors|striptags }}</div>{% endif %}
+      </div>
+
+      <div class="form-field">
+        <label class="form-label">Комментарий к заказу</label>
+        <textarea id="co-comment" class="textarea" name="comment">{{ form.comment.value|default:'' }}</textarea>
+      </div>
+
+      <!-- Способ оплаты -->
+      <div class="form-field" style="margin-top: 24px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.1);">
+        <label class="form-label" style="margin-bottom: 16px; display: block;">Способ оплаты</label>
+        {% if form.payment_method.errors %}
+          <div class="field-error">{{ form.payment_method.errors|striptags }}</div>
+        {% endif %}
+        
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <label style="display: flex; align-items: center; gap: 12px; cursor: pointer; padding: 12px; background-color: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; transition: all 0.2s ease;">
+            <input type="radio" name="payment_method" value="cash" checked style="cursor: pointer; width: 18px; height: 18px; margin: 0;">
+            <span style="font-weight: 500; color: rgba(255,255,255,0.9);">Оплата при получении</span>
+          </label>
+          
+          <label style="display: flex; align-items: center; gap: 12px; cursor: pointer; padding: 12px; background-color: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; transition: all 0.2s ease;">
+            <input type="radio" name="payment_method" value="card" style="cursor: pointer; width: 18px; height: 18px; margin: 0;">
+            <span style="font-weight: 500; color: rgba(255,255,255,0.9);">💳 Оплата картой</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Поля для оплаты картой -->
+      <div id="card-payment-section" style="display: none; margin-top: 24px; padding: 20px; background-color: rgba(255,215,0,0.05); border-radius: 8px; border: 2px solid rgba(255,215,0,0.3); transition: all 0.3s ease;">
+        <p style="font-weight: 600; margin-bottom: 16px; color: var(--gold); font-size: 14px; text-transform: uppercase;">💳 Данные карты</p>
+        
+        <div class="form-field">
+          <label class="form-label" for="co-card-number">Номер карты</label>
+          <input id="co-card-number" class="input" type="text" name="card_number" placeholder="0000 0000 0000 0000" value="{{ form.card_number.value|default:'' }}" maxlength="23" />
+          {% if form.card_number.errors %}<div class="field-error">{{ form.card_number.errors|striptags }}</div>{% endif %}
+        </div>
+
+        <div class="form-field">
+          <label class="form-label" for="co-card-holder">Владелец карты</label>
+          <input id="co-card-holder" class="input" type="text" name="card_holder" placeholder="JOHN DOE" value="{{ form.card_holder.value|default:'' }}" style="text-transform: uppercase;" />
+          {% if form.card_holder.errors %}<div class="field-error">{{ form.card_holder.errors|striptags }}</div>{% endif %}
+        </div>
+
+        <div class="field-grid">
+          <div class="form-field">
+            <label class="form-label" for="co-card-expiry">Срок действия (MM/YY)</label>
+            <input id="co-card-expiry" class="input" type="text" name="card_expiry" placeholder="MM/YY" value="{{ form.card_expiry.value|default:'' }}" maxlength="5" />
+            {% if form.card_expiry.errors %}<div class="field-error">{{ form.card_expiry.errors|striptags }}</div>{% endif %}
+          </div>
+
+          <div class="form-field">
+            <label class="form-label" for="co-card-cvv">CVV код</label>
+            <input id="co-card-cvv" class="input" type="password" name="card_cvv" placeholder="123" value="{{ form.card_cvv.value|default:'' }}" maxlength="4" />
+            {% if form.card_cvv.errors %}<div class="field-error">{{ form.card_cvv.errors|striptags }}</div>{% endif %}
+          </div>
+        </div>
+
+        <p style="font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 12px; line-height: 1.5;">
+          🔒 Данные карты передаются в защищённом виде. Мы не сохраняем полные данные вашей карты на сервере.
+        </p>
+      </div>
+
+      <button class="btn btn-primary btn-full" type="submit" style="margin-top:24px;">
+        Подтвердить заказ →
+      </button>
+    </form>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        console.log('Инициализация формы оплаты...');
+        
+        // Показать/скрыть поля карты в зависимости от выбранного способа оплаты
+        const paymentMethodOptions = document.querySelectorAll('input[name="payment_method"]');
+        const cardPaymentSection = document.getElementById('card-payment-section');
+        
+        if (!cardPaymentSection) {
+          console.error('Не найден элемент card-payment-section');
+          return;
+        }
+        
+        const cardInputs = cardPaymentSection.querySelectorAll('input[name^="card_"]');
+        console.log('Найдено полей карты:', cardInputs.length);
+
+        function updateCardFieldsVisibility() {
+          const selectedOption = document.querySelector('input[name="payment_method"]:checked');
+          if (!selectedOption) {
+            console.warn('Способ оплаты не выбран');
+            return;
+          }
+          
+          const selectedMethod = selectedOption.value;
+          console.log('Выбран способ оплаты:', selectedMethod);
+          
+          if (selectedMethod === 'card') {
+            cardPaymentSection.style.display = 'block';
+            console.log('Показываем поля карты');
+            // Делаем поля карты обязательными
+            cardInputs.forEach(input => {
+              input.required = true;
+            });
+          } else {
+            cardPaymentSection.style.display = 'none';
+            console.log('Скрываем поля карты');
+            // Делаем поля карты необязательными
+            cardInputs.forEach(input => {
+              input.required = false;
+            });
+          }
+        }
+
+        // Обновляем видимость при загрузке страницы
+        setTimeout(() => {
+          updateCardFieldsVisibility();
+        }, 100);
+
+        // Обновляем видимость при изменении выбора
+        paymentMethodOptions.forEach(option => {
+          option.addEventListener('change', updateCardFieldsVisibility);
+        });
+
+        // Форматирование номера карты (пробелы каждые 4 цифры)
+        const cardNumberInput = document.getElementById('co-card-number');
+        if (cardNumberInput) {
+          cardNumberInput.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\s+/g, '');
+            let formattedValue = value.replace(/(\d{4})(?=\d)/g, '$1 ');
+            e.target.value = formattedValue;
+          });
+        }
+
+        // Форматирование даты (MM/YY)
+        const cardExpiryInput = document.getElementById('co-card-expiry');
+        if (cardExpiryInput) {
+          cardExpiryInput.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D+/g, '');
+            if (value.length >= 2) {
+              value = value.substring(0, 2) + '/' + value.substring(2, 4);
+            }
+            e.target.value = value;
+          });
+        }
+
+        // Только цифры для CVV
+        const cardCVVInput = document.getElementById('co-card-cvv');
+        if (cardCVVInput) {
+          cardCVVInput.addEventListener('input', function(e) {
+            e.target.value = e.target.value.replace(/\D+/g, '').substring(0, 4);
+          });
+        }
+      });
+    </script>
+  </div>
+
+  <!-- Order summary -->
+  <aside>
+    <div class="panel panel-pad">
+      <p class="panel-title">Ваш заказ</p>
+
+      <div class="order-items-list">
+        {% for item in items %}
+          <article class="order-item">
+            <div>
+              <div class="order-item-name">{{ item.product.name }}</div>
+              <div class="order-item-meta">
+                {% if item.variant %}{{ item.variant.size }} / {{ item.variant.color }} · {% endif %}{{ item.quantity }} шт.
+              </div>
+            </div>
+            <span class="order-item-price">{{ item.subtotal }} ₸</span>
+          </article>
+        {% endfor %}
+      </div>
+
+      <div class="summary-row">
+        <span>Товары</span>
+        <span>{{ cart_count }} шт.</span>
+      </div>
+      <div class="summary-row">
+        <span>Доставка</span>
+        <span style="color:var(--success);">Бесплатно</span>
+      </div>
+      <div class="summary-total">
+        <span class="summary-total-label">Итого</span>
+        <span class="summary-total-amount">{{ total }} ₸</span>
+      </div>
+    </div>
+  </aside>
+
+</section>
+
+{% endblock %}

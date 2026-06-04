@@ -1,0 +1,30 @@
+{% extends 'shop/base.html' %}
+
+{% block title %}Заказ оформлен · LEVELUP{% endblock %}
+
+{% block content %}
+
+<section class="success-section">
+  <div class="success-card anim a1">
+
+    <div class="success-icon">✓</div>
+
+    <p class="eyebrow" style="justify-content:center;display:flex;">Заказ принят</p>
+    <h1 class="success-heading">Спасибо за покупку!</h1>
+
+    <p class="success-sub">
+      Ваш заказ <strong style="color:var(--text);">#{{ order.id }}</strong> успешно создан.<br />
+      Мы свяжемся с вами по номеру <strong style="color:var(--text);">{{ order.phone }}</strong> для подтверждения.
+    </p>
+
+    <div class="success-amount">{{ order.total_amount }} ₸</div>
+
+    <div class="success-actions">
+      <a class="btn btn-primary" href="{% url 'shop:catalog' %}">Продолжить покупки</a>
+      <a class="btn btn-ghost"   href="{% url 'shop:home' %}">На главную</a>
+    </div>
+
+  </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,101 @@
+{% extends 'shop/base.html' %}
+
+{% block title %}Контакты · LEVELUP{% endblock %}
+
+{% block content %}
+
+<section class="page-hero anim a1">
+  <p class="eyebrow">Связь</p>
+  <h1 class="page-heading">Контакты</h1>
+  <p class="page-lead">
+    Свяжитесь с нами удобным способом — поможем с выбором игры, доставкой или оптовыми заказами.
+  </p>
+</section>
+
+<section class="section">
+  <div class="two-col anim a1">
+
+    <!-- Contact form -->
+    <div class="col-block">
+      <h2 class="col-heading">Написать нам</h2>
+
+      <form method="post" class="contact-form">
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+          <div class="alert error">{{ form.non_field_errors }}</div>
+        {% endif %}
+
+        <div class="field-grid">
+          <div class="form-field">
+            <label class="form-label" for="ct-name">Имя</label>
+            <input id="ct-name" class="input" type="text" name="name" value="{{ form.name.value|default:'' }}" required />
+            {% if form.name.errors %}<div class="field-error">{{ form.name.errors|striptags }}</div>{% endif %}
+          </div>
+
+          <div class="form-field">
+            <label class="form-label" for="ct-email">Email</label>
+            <input id="ct-email" class="input" type="email" name="email" value="{{ form.email.value|default:'' }}" required />
+            {% if form.email.errors %}<div class="field-error">{{ form.email.errors|striptags }}</div>{% endif %}
+          </div>
+        </div>
+
+        <div class="field-grid">
+          <div class="form-field">
+            <label class="form-label" for="ct-phone">Телефон</label>
+            <input id="ct-phone" class="input" type="text" name="phone" value="{{ form.phone.value|default:'' }}" />
+          </div>
+
+          <div class="form-field">
+            <label class="form-label" for="ct-topic">Тема</label>
+            <input id="ct-topic" class="input" type="text" name="topic" value="{{ form.topic.value|default:'' }}" required />
+            {% if form.topic.errors %}<div class="field-error">{{ form.topic.errors|striptags }}</div>{% endif %}
+          </div>
+        </div>
+
+        <div class="form-field">
+          <label class="form-label" for="ct-message">Сообщение</label>
+          <textarea id="ct-message" class="textarea" name="message" required>{{ form.message.value|default:'' }}</textarea>
+          {% if form.message.errors %}<div class="field-error">{{ form.message.errors|striptags }}</div>{% endif %}
+        </div>
+
+        <button class="btn btn-primary" type="submit">Отправить</button>
+      </form>
+    </div>
+
+    <!-- Stores + Info -->
+    <div class="col-block">
+      <h2 class="col-heading">Магазины</h2>
+
+      <div class="store-list">
+        {% for store in stores %}
+          <div class="store-item">
+            <div class="store-city">{{ store.city }}</div>
+            <div class="store-detail">{{ store.address }}</div>
+            <div class="store-detail">{{ store.work_time }}</div>
+          </div>
+        {% endfor %}
+      </div>
+
+      <div style="margin-top: 24px;">
+        <p class="filter-label" style="margin-bottom:12px;">Реквизиты</p>
+
+        <div class="contact-info-row">
+          <span class="contact-key">Email</span>
+          <span class="contact-val">hello@levelup.store</span>
+        </div>
+        <div class="contact-info-row">
+          <span class="contact-key">Телефон</span>
+          <span class="contact-val">+7 (777) 000-00-00</span>
+        </div>
+        <div class="contact-info-row">
+          <span class="contact-key">Instagram</span>
+          <span class="contact-val">@levelup.store</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+{% endblock %}

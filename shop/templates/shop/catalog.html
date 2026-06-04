@@ -1,0 +1,125 @@
+{% extends 'shop/base.html' %}
+
+{% block title %}Каталог · LEVELUP{% endblock %}
+
+{% block content %}
+
+<section class="section-first" style="padding: clamp(36px,5vw,60px) 0 0;">
+  <div class="section-header anim a1">
+    <div>
+      <p class="eyebrow">Ассортимент</p>
+      <h1 class="section-h">Каталог игр</h1>
+    </div>
+    <span class="footer-copy" style="align-self:flex-end;">Найдено: {{ page_obj.paginator.count }}</span>
+  </div>
+
+  <!-- Filters -->
+  <form class="filters-bar anim a2" method="get">
+    <div class="filter-field" style="grid-column: span 2;">
+      <label class="filter-label" for="q-input">Поиск</label>
+      <input id="q-input" class="input" type="text" name="q" value="{{ query }}" placeholder="Название, разработчик..." />
+    </div>
+
+    <div class="filter-field">
+      <label class="filter-label" for="cat-select">Категория</label>
+      <select id="cat-select" class="select" name="category" onchange="this.form.submit()">
+        <option value="">Все</option>
+        {% for category in categories %}
+          <option value="{{ category.slug }}" {% if selected_category == category.slug %}selected{% endif %}>{{ category.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="filter-field">
+      <label class="filter-label" for="platform-select">Платформа</label>
+      <select id="platform-select" class="select" name="platform" onchange="this.form.submit()">
+        <option value="">Любая</option>
+        {% for value, label in platform_choices %}
+          <option value="{{ value }}" {% if selected_platform == value %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="filter-field">
+      <label class="filter-label" for="age-select">Рейтинг</label>
+      <select id="age-select" class="select" name="age_rating" onchange="this.form.submit()">
+        <option value="">Любой</option>
+        <option value="pegi3"  {% if selected_age_rating == 'pegi3' %}selected{% endif %}>PEGI 3</option>
+        <option value="pegi7"  {% if selected_age_rating == 'pegi7' %}selected{% endif %}>PEGI 7</option>
+        <option value="pegi12" {% if selected_age_rating == 'pegi12' %}selected{% endif %}>PEGI 12</option>
+        <option value="pegi16" {% if selected_age_rating == 'pegi16' %}selected{% endif %}>PEGI 16</option>
+        <option value="pegi18" {% if selected_age_rating == 'pegi18' %}selected{% endif %}>PEGI 18</option>
+      </select>
+    </div>
+
+    <div class="filter-field">
+      <label class="filter-label" for="min-input">Цена от</label>
+      <input id="min-input" class="input" type="number" min="0" step="1" name="min_price" value="{{ min_price }}" placeholder="0" />
+    </div>
+
+    <div class="filter-field">
+      <label class="filter-label" for="max-input">Цена до</label>
+      <input id="max-input" class="input" type="number" min="0" step="1" name="max_price" value="{{ max_price }}" placeholder="50000" />
+    </div>
+
+    <div class="filter-field">
+      <label class="filter-label" for="sort-select">Сортировка</label>
+      <select id="sort-select" class="select" name="sort" onchange="this.form.submit()">
+        <option value="new"        {% if selected_sort == 'new' %}selected{% endif %}>Новые</option>
+        <option value="popular"    {% if selected_sort == 'popular' %}selected{% endif %}>Популярные</option>
+        <option value="price_asc"  {% if selected_sort == 'price_asc' %}selected{% endif %}>Цена ↑</option>
+        <option value="price_desc" {% if selected_sort == 'price_desc' %}selected{% endif %}>Цена ↓</option>
+        <option value="name"       {% if selected_sort == 'name' %}selected{% endif %}>По названию</option>
+      </select>
+    </div>
+
+    <label class="inline-check">
+      <input type="checkbox" name="in_stock" value="1" onchange="this.form.submit()" {% if in_stock_only %}checked{% endif %} />
+      В наличии
+    </label>
+
+    <div style="display:flex;gap:8px;align-items:flex-end;">
+      <button class="btn btn-primary" type="submit">Найти</button>
+      <a class="btn btn-ghost" href="{% url 'shop:catalog' %}">Сброс</a>
+    </div>
+  </form>
+
+  <!-- Quick chips -->
+  <div class="chip-row anim a3">
+    <a class="cat-chip" href="{% url 'shop:catalog' %}?sort=popular">Популярные</a>
+    <a class="cat-chip" href="{% url 'shop:catalog' %}?platform=ps5">PS5</a>
+    <a class="cat-chip" href="{% url 'shop:catalog' %}?platform=pc">PC</a>
+    <a class="cat-chip" href="{% url 'shop:catalog' %}?platform=switch">Nintendo Switch</a>
+    <a class="cat-chip" href="{% url 'shop:catalog' %}?in_stock=1">В наличии</a>
+  </div>
+</section>
+
+<!-- Product grid -->
+<section class="section">
+  <div class="product-grid anim a1">
+    {% for product in products %}
+      {% include 'shop/partials/product_card.html' with product=product %}
+    {% empty %}
+      <div class="empty" style="grid-column:1/-1;">
+        По заданным фильтрам ничего не найдено. Попробуйте расширить параметры.
+      </div>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- Pagination -->
+{% if page_obj.paginator.num_pages > 1 %}
+  <div class="pagination anim a2">
+    {% if page_obj.has_previous %}
+      <a class="btn btn-ghost" href="?q={{ query|urlencode }}&category={{ selected_category|urlencode }}&platform={{ selected_platform|urlencode }}&age_rating={{ selected_age_rating|urlencode }}&min_price={{ min_price|urlencode }}&max_price={{ max_price|urlencode }}&sort={{ selected_sort|urlencode }}{% if in_stock_only %}&in_stock=1{% endif %}&page={{ page_obj.previous_page_number }}">← Назад</a>
+    {% endif %}
+
+    <span class="page-info">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+
+    {% if page_obj.has_next %}
+      <a class="btn btn-ghost" href="?q={{ query|urlencode }}&category={{ selected_category|urlencode }}&platform={{ selected_platform|urlencode }}&age_rating={{ selected_age_rating|urlencode }}&min_price={{ min_price|urlencode }}&max_price={{ max_price|urlencode }}&sort={{ selected_sort|urlencode }}{% if in_stock_only %}&in_stock=1{% endif %}&page={{ page_obj.next_page_number }}">Вперед →</a>
+    {% endif %}
+  </div>
+{% endif %}
+
+{% endblock %}

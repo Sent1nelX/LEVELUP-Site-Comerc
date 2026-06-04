@@ -1,0 +1,65 @@
+{% extends 'shop/base.html' %}
+
+{% block title %}О нас · LEVELUP{% endblock %}
+
+{% block content %}
+
+<!-- Hero -->
+<section class="page-hero anim a1">
+  <p class="eyebrow">О нас</p>
+  <h1 class="page-heading">LEVELUP —<br><span style="color:var(--accent-lt);">твой игровой магазин</span></h1>
+  <p class="page-lead">
+    Мы продаём видеоигры для всех популярных платформ: физические диски и цифровые издания.
+    Широкий выбор жанров, быстрая доставка по Казахстану.
+  </p>
+</section>
+
+<!-- Stats -->
+<section class="section">
+  <div class="stats-row anim a1">
+    {% for item in stats %}
+      <div class="stat-cell">
+        <div class="stat-value">{{ item.value }}</div>
+        <div class="stat-label">{{ item.label }}</div>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- Philosophy -->
+<section class="section">
+  <div class="section-header anim a1">
+    <div>
+      <p class="eyebrow">Наши принципы</p>
+      <h2 class="section-h">Почему LEVELUP</h2>
+    </div>
+  </div>
+
+  <div class="two-col anim a2">
+    <div class="col-block">
+      <h3 class="col-heading">Наша миссия</h3>
+      <div class="col-body">
+        <p>
+          Мы верим, что каждый геймер заслуживает доступа к лучшим играм без переплат
+          и долгого ожидания. Поэтому работаем напрямую с официальными дистрибьюторами.
+        </p>
+        <p>
+          Только оригинальные копии — никаких пиратских дисков и ненадёжных цифровых ключей
+          с серых рынков.
+        </p>
+      </div>
+    </div>
+
+    <div class="col-block">
+      <h3 class="col-heading">Наши преимущества</h3>
+      <ul class="clean-list">
+        <li>Официальные физические и цифровые копии</li>
+        <li>PS5, Xbox Series X, PS4, Xbox One, Nintendo Switch и PC</li>
+        <li>Доставка по всему Казахстану за 24–48 часов</li>
+        <li>Поддержка и консультации по выбору игры</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

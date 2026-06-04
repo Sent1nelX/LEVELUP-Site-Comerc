@@ -1,0 +1,102 @@
+{% load static %}<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}LEVELUP{% endblock %}</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="{% static 'shop/styles.css' %}" />
+</head>
+<body>
+
+  <!-- ── Topline ─────────────────────────────────── -->
+  <div class="topline">
+    <div class="container topline-inner">
+      <span>🎮 Предзаказ GTA VI уже доступен</span>
+      <span>Доставка по всему Казахстану</span>
+      <span>+7 (777) 000-00-00</span>
+    </div>
+  </div>
+
+  <!-- ── Header ──────────────────────────────────── -->
+  <header class="site-header">
+    <div class="container header-inner">
+
+      <a href="{% url 'shop:home' %}" class="logo">LEVEL<span class="accent-text">UP</span></a>
+
+      <nav class="nav">
+        <a href="{% url 'shop:home' %}"     class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}">Главная</a>
+        <a href="{% url 'shop:catalog' %}"  class="nav-link {% if request.resolver_match.url_name == 'catalog' or request.resolver_match.url_name == 'product_detail' %}active{% endif %}">Каталог</a>
+        <a href="{% url 'shop:about' %}"    class="nav-link {% if request.resolver_match.url_name == 'about' %}active{% endif %}">О нас</a>
+        <a href="{% url 'shop:delivery' %}" class="nav-link {% if request.resolver_match.url_name == 'delivery' %}active{% endif %}">Доставка</a>
+        <a href="{% url 'shop:contacts' %}" class="nav-link {% if request.resolver_match.url_name == 'contacts' %}active{% endif %}">Контакты</a>
+        <a href="{% url 'shop:faq' %}"      class="nav-link {% if request.resolver_match.url_name == 'faq' %}active{% endif %}">FAQ</a>
+      </nav>
+
+      <div class="header-actions">
+        <a href="{% url 'shop:cart' %}" class="cart-pill {% if '/cart' in request.path or '/checkout' in request.path %}active{% endif %}">
+          Корзина
+          <span>{{ cart_count }}</span>
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ── Main ────────────────────────────────────── -->
+  <main class="container">
+
+    {% if messages %}
+      <div class="alerts">
+        {% for message in messages %}
+          <div class="alert {{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    {% block content %}{% endblock %}
+
+  </main>
+
+  <!-- ── Footer ──────────────────────────────────── -->
+  <footer class="site-footer">
+    <div class="container footer-grid">
+
+      <section>
+        <a href="{% url 'shop:home' %}" class="footer-brand-name">LEVEL<span class="accent-text">UP</span></a>
+        <p class="footer-desc">Интернет-магазин видеоигр. Физические и цифровые копии для PS5, Xbox, Nintendo Switch и PC.</p>
+      </section>
+
+      <section>
+        <p class="footer-col-title">Навигация</p>
+        <div class="footer-links">
+          <a href="{% url 'shop:catalog' %}">Каталог игр</a>
+          <a href="{% url 'shop:about' %}">О нас</a>
+          <a href="{% url 'shop:delivery' %}">Доставка и оплата</a>
+          <a href="{% url 'shop:contacts' %}">Контакты</a>
+        </div>
+      </section>
+
+      <section>
+        <p class="footer-col-title">Покупателям</p>
+        <div class="footer-links">
+          <a href="{% url 'shop:faq' %}">Вопросы и ответы</a>
+          <a href="{% url 'shop:cart' %}">Корзина</a>
+          <a href="{% url 'shop:checkout' %}">Оформление заказа</a>
+          <a href="/admin/" target="_blank" rel="noreferrer">Панель управления</a>
+        </div>
+      </section>
+
+    </div>
+
+    <div class="container footer-bottom">
+      <span class="footer-copy">© {% now "Y" %} LEVELUP. Все права защищены.</span>
+    </div>
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,31 @@
+<article class="card">
+  <div class="card-img-wrap">
+    <a href="{% url 'shop:product_detail' slug=product.slug %}">
+      <img
+        class="card-image"
+        src="{{ product.primary_image_url|default:'https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?w=800&auto=format&fit=crop' }}"
+        alt="{{ product.name }}"
+        loading="lazy"
+      />
+    </a>
+    {% if product.discount_percent %}
+      <span class="card-badge">-{{ product.discount_percent }}%</span>
+    {% endif %}
+  </div>
+
+  <div class="card-body">
+    <p class="card-meta">{{ product.category.name }} · {{ product.get_age_rating_display }}</p>
+    <h3 class="card-title">{{ product.name }}</h3>
+
+    <div class="price-row">
+      <span class="price">{{ product.final_price }} ₸</span>
+      {% if product.discount_percent %}
+        <span class="old-price">{{ product.price }} ₸</span>
+      {% endif %}
+    </div>
+
+    <div class="card-cta">
+      <a class="btn btn-secondary btn-full" href="{% url 'shop:product_detail' slug=product.slug %}">Подробнее</a>
+    </div>
+  </div>
+</article>
