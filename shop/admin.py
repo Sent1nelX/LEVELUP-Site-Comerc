@@ -63,6 +63,6 @@ class ContactRequestAdmin(admin.ModelAdmin):
     ordering = ("-created_at",)
 
 
-admin.site.site_header = "LEVELUP Admin"
-admin.site.site_title = "LEVELUP"
-admin.site.index_title = "Управление магазином LEVELUP"
+admin.site.site_header = "Gamestore Admin"
+admin.site.site_title = "Gamestore"
+admin.site.index_title = "Управление магазином Gamestore"
